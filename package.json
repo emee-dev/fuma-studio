@@ -1,0 +1,22 @@
+{
+  "name": "fuma-studio",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "tenant:dev": "pnpm run --filter=tenant dev",
+    "tenant:build": "pnpm run --filter=tenant build",
+    "web:dev": "pnpm run --filter=web dev",
+    "web:build": "pnpm run --filter=web build",
+    "fuma:build": "concurrently --kill-others \"pnpm run --filter=@trythis/fuma-content build\" \"pnpm run --filter=@trythis/fuma-react build\""
+  },
+  "dependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.2.11",
+    "@types/node": "^22.10.5",
+    "tsx": "^4.19.2",
+    "turbo": "^2.4.4"
+  },
+  "packageManager": "pnpm@9.13.2"
+}
