@@ -1,0 +1,18 @@
+{
+  "enabled": true,
+  "name": "Fuma Content README Updater",
+  "description": "Updates the README file for the fuma-content workspace with all CLI commands and arguments whenever CLI-related files are modified",
+  "version": "1",
+  "when": {
+    "type": "fileEdited",
+    "patterns": [
+      "packages/fuma-content/package.json",
+      "packages/fuma-content/src/**/*.ts",
+      "packages/fuma-content/README.md"
+    ]
+  },
+  "then": {
+    "type": "askAgent",
+    "prompt": "Update the README file for the fuma-content workspace (packages/fuma-content/README.md) with comprehensive documentation of all CLI commands and their arguments. Include usage examples, command descriptions, and parameter details based on the current CLI implementation in the source code."
+  }
+}
