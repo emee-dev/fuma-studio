@@ -1,11 +1,22 @@
-'use client';
+"use client";
 
-import * as React from 'react';
-
-import type { PlateEditor, PlateElementProps } from 'platejs/react';
-
-import { AIChatPlugin } from '@platejs/ai/react';
 import {
+  insertBlock,
+  insertInlineElement,
+} from "@/components/editor/transforms";
+import {
+  InlineCombobox,
+  InlineComboboxContent,
+  InlineComboboxEmpty,
+  InlineComboboxGroup,
+  InlineComboboxGroupLabel,
+  InlineComboboxInput,
+  InlineComboboxItem,
+} from "@/components/editor/ui/inline-combobox";
+import { AIChatPlugin } from "@platejs/ai/react";
+import { SlashInputPlugin, SlashPlugin } from "@platejs/slash-command/react";
+import {
+  Blocks,
   CalendarIcon,
   ChevronRightIcon,
   Code2,
@@ -23,24 +34,10 @@ import {
   Square,
   Table,
   TableOfContentsIcon,
-} from 'lucide-react';
-import { type TComboboxInputElement, KEYS } from 'platejs';
-import { PlateElement } from 'platejs/react';
-
-import {
-  insertBlock,
-  insertInlineElement,
-} from '@/components/editor/transforms';
-
-import {
-  InlineCombobox,
-  InlineComboboxContent,
-  InlineComboboxEmpty,
-  InlineComboboxGroup,
-  InlineComboboxGroupLabel,
-  InlineComboboxInput,
-  InlineComboboxItem,
-} from './inline-combobox';
+} from "lucide-react";
+import { type TComboboxInputElement, KEYS } from "platejs";
+import type { PlateEditor, PlateElementProps } from "platejs/react";
+import { PlateElement } from "platejs/react";
 
 type Group = {
   group: string;
@@ -55,14 +52,16 @@ type Group = {
   }[];
 };
 
+// TODO move this to the MarkdownKit file
+// to make it easier to manage.
 const groups: Group[] = [
   {
-    group: 'AI',
+    group: "AI",
     items: [
       {
         focusEditor: false,
         icon: <SparklesIcon />,
-        value: 'AI',
+        value: "AI",
         onSelect: (editor) => {
           editor.getApi(AIChatPlugin).aiChat.show();
         },
@@ -70,78 +69,78 @@ const groups: Group[] = [
     ],
   },
   {
-    group: 'Basic blocks',
+    group: "Basic blocks",
     items: [
       {
         icon: <PilcrowIcon />,
-        keywords: ['paragraph'],
-        label: 'Text',
+        keywords: ["paragraph"],
+        label: "Text",
         value: KEYS.p,
       },
       {
         icon: <Heading1Icon />,
-        keywords: ['title', 'h1'],
-        label: 'Heading 1',
+        keywords: ["title", "h1"],
+        label: "Heading 1",
         value: KEYS.h1,
       },
       {
         icon: <Heading2Icon />,
-        keywords: ['subtitle', 'h2'],
-        label: 'Heading 2',
+        keywords: ["subtitle", "h2"],
+        label: "Heading 2",
         value: KEYS.h2,
       },
       {
         icon: <Heading3Icon />,
-        keywords: ['subtitle', 'h3'],
-        label: 'Heading 3',
+        keywords: ["subtitle", "h3"],
+        label: "Heading 3",
         value: KEYS.h3,
       },
       {
         icon: <ListIcon />,
-        keywords: ['unordered', 'ul', '-'],
-        label: 'Bulleted list',
+        keywords: ["unordered", "ul", "-"],
+        label: "Bulleted list",
         value: KEYS.ul,
       },
       {
         icon: <ListOrdered />,
-        keywords: ['ordered', 'ol', '1'],
-        label: 'Numbered list',
+        keywords: ["ordered", "ol", "1"],
+        label: "Numbered list",
         value: KEYS.ol,
       },
       {
         icon: <Square />,
-        keywords: ['checklist', 'task', 'checkbox', '[]'],
-        label: 'To-do list',
+        keywords: ["checklist", "task", "checkbox", "[]"],
+        label: "To-do list",
         value: KEYS.listTodo,
       },
       {
         icon: <ChevronRightIcon />,
-        keywords: ['collapsible', 'expandable'],
-        label: 'Toggle',
+        keywords: ["collapsible", "expandable"],
+        label: "Toggle",
         value: KEYS.toggle,
       },
       {
         icon: <Code2 />,
-        keywords: ['```'],
-        label: 'Code Block',
+        keywords: ["```"],
+        label: "Code Block",
         value: KEYS.codeBlock,
       },
       {
         icon: <Table />,
-        label: 'Table',
+        label: "Table",
         value: KEYS.table,
       },
       {
         icon: <Quote />,
-        keywords: ['citation', 'blockquote', 'quote', '>'],
-        label: 'Blockquote',
+        keywords: ["citation", "blockquote", "quote", ">"],
+        label: "Blockquote",
         value: KEYS.blockquote,
       },
       {
-        description: 'Insert a highlighted block.',
+        description: "Insert a highlighted block.",
         icon: <LightbulbIcon />,
-        keywords: ['note'],
-        label: 'Callout',
+        keywords: ["note"],
+        label: "Callout",
         value: KEYS.callout,
       },
     ].map((item) => ({
@@ -152,23 +151,23 @@ const groups: Group[] = [
     })),
   },
   {
-    group: 'Advanced blocks',
+    group: "Advanced blocks",
     items: [
       {
         icon: <TableOfContentsIcon />,
-        keywords: ['toc'],
-        label: 'Table of contents',
+        keywords: ["toc"],
+        label: "Table of contents",
         value: KEYS.toc,
       },
       {
         icon: <Columns3Icon />,
-        label: '3 columns',
-        value: 'action_three_columns',
+        label: "3 columns",
+        value: "action_three_columns",
       },
       {
         focusEditor: false,
         icon: <RadicalIcon />,
-        label: 'Equation',
+        label: "Equation",
         value: KEYS.equation,
       },
     ].map((item) => ({
@@ -179,19 +178,36 @@ const groups: Group[] = [
     })),
   },
   {
-    group: 'Inline',
+    group: "Fuma Studio",
+    items: [
+      {
+        focusEditor: false,
+        icon: <Blocks />,
+        keywords: ["fs"],
+        label: "Equation",
+        value: "fs_component",
+      },
+    ].map((item) => ({
+      ...item,
+      onSelect: (editor, value) => {
+        insertBlock(editor, value);
+      },
+    })),
+  },
+  {
+    group: "Inline",
     items: [
       {
         focusEditor: true,
         icon: <CalendarIcon />,
-        keywords: ['time'],
-        label: 'Date',
+        keywords: ["time"],
+        label: "Date",
         value: KEYS.date,
       },
       {
         focusEditor: false,
         icon: <RadicalIcon />,
-        label: 'Inline Equation',
+        label: "Inline Equation",
         value: KEYS.inlineEquation,
       },
     ].map((item) => ({
@@ -203,9 +219,7 @@ const groups: Group[] = [
   },
 ];
 
-export function SlashInputElement(
-  props: PlateElementProps<TComboboxInputElement>
-) {
+function SlashInputElement(props: PlateElementProps<TComboboxInputElement>) {
   const { editor, element } = props;
 
   return (
@@ -245,3 +259,15 @@ export function SlashInputElement(
     </PlateElement>
   );
 }
+
+export const SlashKit = [
+  SlashPlugin.configure({
+    options: {
+      triggerQuery: (editor) =>
+        !editor.api.some({
+          match: { type: editor.getType(KEYS.codeBlock) },
+        }),
+    },
+  }),
+  SlashInputPlugin.withComponent(SlashInputElement),
+];

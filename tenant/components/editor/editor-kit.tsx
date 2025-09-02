@@ -28,11 +28,11 @@ import { FontKit } from "./plugins/font-kit";
 import { LineHeightKit } from "./plugins/line-height-kit";
 import { LinkKit } from "./plugins/link-kit";
 import { ListKit } from "./plugins/list-kit";
-import { MarkdownKit } from "./plugins/markdown-kit";
+import { MarkdownKit } from "./markdown-kit";
 import { MathKit } from "./plugins/math-kit";
 import { MediaKit } from "./plugins/media-kit";
 import { MentionKit } from "./plugins/mention-kit";
-import { SlashKit } from "./plugins/slash-kit";
+import { SlashKit } from "./slash-kit";
 import { TableKit } from "./plugins/table-kit";
 import { TocKit } from "./plugins/toc-kit";
 import { ToggleKit } from "./plugins/toggle-kit";
@@ -116,7 +116,7 @@ export const EditorKit = [
       },
     },
   }),
-  ...FixedToolbarKit,
+  // ...FixedToolbarKit,
   ...FloatingToolbarKit,
 ];
 

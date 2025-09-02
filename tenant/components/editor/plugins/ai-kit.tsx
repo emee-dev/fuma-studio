@@ -9,7 +9,7 @@ import type { UseChatOptions } from "ai/react";
 import { getPluginType, KEYS, PathApi } from "platejs";
 import { usePluginOption } from "platejs/react";
 import { CursorOverlayKit } from "./cursor-overlay-kit";
-import { MarkdownKit } from "./markdown-kit";
+import { MarkdownKit } from "../markdown-kit";
 
 export const aiChatPlugin = AIChatPlugin.extend({
   options: {
@@ -21,15 +21,15 @@ export const aiChatPlugin = AIChatPlugin.extend({
       return isBlockSelecting
         ? PROMPT_TEMPLATES.userBlockSelecting
         : isSelecting
-          ? PROMPT_TEMPLATES.userSelecting
-          : PROMPT_TEMPLATES.userDefault;
+        ? PROMPT_TEMPLATES.userSelecting
+        : PROMPT_TEMPLATES.userDefault;
     },
     systemTemplate: ({ isBlockSelecting, isSelecting }) => {
       return isBlockSelecting
         ? PROMPT_TEMPLATES.systemBlockSelecting
         : isSelecting
-          ? PROMPT_TEMPLATES.systemSelecting
-          : PROMPT_TEMPLATES.systemDefault;
+        ? PROMPT_TEMPLATES.systemSelecting
+        : PROMPT_TEMPLATES.systemDefault;
     },
   },
   render: {

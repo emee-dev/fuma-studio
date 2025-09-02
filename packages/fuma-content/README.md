@@ -1,6 +1,6 @@
 # @trythis/fuma-content
 
-A CLI tool for bundling HTTP collections and UI components from various sources for use in Fuma Studio. Currently supports Bruno, Panda, and Yaak HTTP clients for API collections, plus UI component bundling capabilities.
+A CLI tool for bundling HTTP collections and UI components from various sources for use in Fuma Studio. Currently supports Bruno, (Panda, Yaak - planned) HTTP clients for API collections, plus UI component bundling capabilities.
 
 ## Installation
 
@@ -71,7 +71,7 @@ fuma-content build ./collections/main --api-key your-api-key-here --rest-client 
 
 Builds UI components for use in Fuma Studio.
 
-#### Usage
+#### Usage (planned)
 
 ```bash
 fuma-content ui <path> --api-key <your-api-key>

@@ -1,4 +1,4 @@
-import "./global.css"; 
+import "./global.css";
 import { Inter } from "next/font/google";
 import type { ReactNode } from "react";
 
@@ -6,7 +6,9 @@ const inter = Inter({
   subsets: ["latin"],
 });
 
-const RootProvider = () => {}
+const RootProvider = ({ children }: { children: ReactNode }) => {
+  return children;
+};
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (

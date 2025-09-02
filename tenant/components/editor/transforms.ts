@@ -1,31 +1,31 @@
-'use client';
+"use client";
 
-import type { PlateEditor } from 'platejs/react';
+import type { PlateEditor } from "platejs/react";
 
-import { insertCallout } from '@platejs/callout';
-import { insertCodeBlock, toggleCodeBlock } from '@platejs/code-block';
-import { insertDate } from '@platejs/date';
-import { insertColumnGroup, toggleColumnGroup } from '@platejs/layout';
-import { triggerFloatingLink } from '@platejs/link/react';
-import { insertEquation, insertInlineEquation } from '@platejs/math';
+import { insertCallout } from "@platejs/callout";
+import { insertCodeBlock, toggleCodeBlock } from "@platejs/code-block";
+import { insertDate } from "@platejs/date";
+import { insertColumnGroup, toggleColumnGroup } from "@platejs/layout";
+import { triggerFloatingLink } from "@platejs/link/react";
+import { insertEquation, insertInlineEquation } from "@platejs/math";
 import {
   insertAudioPlaceholder,
   insertFilePlaceholder,
   insertMedia,
   insertVideoPlaceholder,
-} from '@platejs/media';
-import { SuggestionPlugin } from '@platejs/suggestion/react';
-import { TablePlugin } from '@platejs/table/react';
-import { insertToc } from '@platejs/toc';
+} from "@platejs/media";
+import { SuggestionPlugin } from "@platejs/suggestion/react";
+import { TablePlugin } from "@platejs/table/react";
+import { insertToc } from "@platejs/toc";
 import {
   type NodeEntry,
   type Path,
   type TElement,
   KEYS,
   PathApi,
-} from 'platejs';
+} from "platejs";
 
-const ACTION_THREE_COLUMNS = 'action_three_columns';
+const ACTION_THREE_COLUMNS = "action_three_columns";
 
 const insertList = (editor: PlateEditor, type: string) => {
   editor.tf.insertNodes(
@@ -73,7 +73,7 @@ const insertInlineMap: Record<
 > = {
   [KEYS.date]: (editor) => insertDate(editor, { select: true }),
   [KEYS.inlineEquation]: (editor) =>
-    insertInlineEquation(editor, '', { select: true }),
+    insertInlineEquation(editor, "", { select: true }),
   [KEYS.link]: (editor) => triggerFloatingLink(editor, { focused: true }),
 };
 
@@ -82,18 +82,34 @@ export const insertBlock = (editor: PlateEditor, type: string) => {
     const block = editor.api.block();
 
     if (!block) return;
+
     if (type in insertBlockMap) {
       insertBlockMap[type](editor, type);
     } else {
-      editor.tf.insertNodes(editor.api.create.block({ type }), {
-        at: PathApi.next(block[1]),
-        select: true,
-      });
+      if (!type.startsWith("fs")) {
+        editor.tf.insertNodes(editor.api.create.block({ type }), {
+          at: PathApi.next(block[1]),
+          select: true,
+        });
+      }
+
+      editor.tf.insertNodes(
+        editor.api.create.block({
+          type,
+          fsProps: { attr: "" },
+        }),
+        {
+          at: PathApi.next(block[1]),
+          select: true,
+        }
+      );
     }
+
     if (getBlockType(block[0]) !== type) {
-      editor.getApi(SuggestionPlugin).suggestion.withoutSuggestions(() => {
-        editor.tf.removeNodes({ previousEmptyBlock: true });
-      });
+      // TODO refactor this logic since I got rid of SuggestionPlugin
+      // editor.getApi(SuggestionPlugin).suggestion.withoutSuggestions(() => {
+      //   editor.tf.removeNodes({ previousEmptyBlock: true });
+      // });
     }
   });
 };
@@ -141,7 +157,7 @@ export const setBlockType = (
       const [node, path] = entry;
 
       if (node[KEYS.listType]) {
-        editor.tf.unsetNodes([KEYS.listType, 'indent'], { at: path });
+        editor.tf.unsetNodes([KEYS.listType, "indent"], { at: path });
       }
       if (type in setBlockMap) {
         return setBlockMap[type](editor, type, entry);
@@ -161,7 +177,7 @@ export const setBlockType = (
       }
     }
 
-    const entries = editor.api.blocks({ mode: 'lowest' });
+    const entries = editor.api.blocks({ mode: "lowest" });
 
     entries.forEach((entry) => setEntry(entry));
   });

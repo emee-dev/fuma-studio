@@ -1,13 +1,16 @@
-
-import type { MDXComponents } from "mdx/types";
+import { PluginView } from "@/components/editor/markdown-ui";
+import { type MDXComponents } from "@trythis/fuma-react";
 
 const components: MDXComponents = {
+  fs_component: PluginView,
 };
 
 // Override or add your mdx components here
-export function useMDXComponents(defaultmdxComponents?: MDXComponents): MDXComponents {
+export function useMDXComponents(
+  defaultComponents?: MDXComponents
+): MDXComponents {
   return {
-    ...defaultmdxComponents,
-    ...components
+    ...defaultComponents,
+    ...components,
   };
 }
